@@ -21,7 +21,20 @@ h3 {
     background-color: #262626;
     color: #fff;
 }
+
+.footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 60px;
+    text-align: center;
+    font-size: 22pt;
+    background-color: #262626;
+    color: #fff;
+}
+
 body, html {
+	background-color: #40494f;
     width: 100%;
     padding: 0;
     margin: 0;
@@ -29,7 +42,6 @@ body, html {
     flex-flow: column;
 }
 .body {
-    background-color: #40494f;
     color: #fff;
     width: 100%;
     display: flex;
@@ -50,6 +62,9 @@ body, html {
 table:nth-of-type(1){
     text-align: center;
 }
+.new {
+    border: 1px solid orange;
+}
 td {
     padding: 0;
     margin: 0;
@@ -62,7 +77,26 @@ tr:hover {
 }
 
 @media screen and (max-width: 640px) {
-    .reload {
+    .icons {
         display: none;
     }
 }
+@media screen and (min-width: 980px) {
+	.brand {
+    display: inline-block;
+    text-align: center;
+    color: #262626;
+    padding: 0 5px 0 5px;
+    border-radius: 3px;
+    background-color: #ff9900;
+	}
+	.icons {
+        font-size: 18pt;
+    }
+    .body {
+	width: 85%;
+	display: flex;
+    flex-flow: column;
+	align-self: center;
+    align-items: center;
+	}
