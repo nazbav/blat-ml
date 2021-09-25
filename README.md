@@ -13,7 +13,7 @@
 Код автоматически генерирует страницы
   - academicol.php - кеш-страница расписания с academicol.ru
   - volbi.php - кеш-страница расписания с lk.volbi.ru
-  - zameny.php - нужны для работы бота ВК https://github.com/nazbav/schedule-bot-service
+  - zameny.php - нужен для работы бота ВК https://github.com/nazbav/schedule-bot-service
   - perser.php - парсер docx файлов (имеется устаревший код)
   - index.php - файл маршрутизации
 
