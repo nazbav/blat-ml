@@ -26,11 +26,11 @@ if (!empty($content)) {
         $zameny = [];
         foreach ($urls as $url) {
             $url = urldecode($url);
-            $moth = [1=>'января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
+            $moth = [1 => 'января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
             if (preg_match('%([0-9][0-9])_(' . implode('|', $moth) . ')_([0-9]{2,4})%ui', $url, $matches)) {
                 $one = explode('_', $matches[0]);
                 $time = strtotime($one[0] . '.' . array_search($one[1], $moth) . '.' . $one[2] . ' 23:59:00');
-                $zameny[] = ['name' => strtr($matches[0],'_',' '), 'url' => $url, 'date' => $time];
+                $zameny[] = ['name' => strtr($matches[0], '_', ' '), 'url' => $url, 'date' => $time];
             }
         }
         echo json_encode($zameny, JSON_UNESCAPED_UNICODE);

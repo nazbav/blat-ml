@@ -2,28 +2,28 @@
 date_default_timezone_set('Europe/Volgograd');
 //setlocale (LC_ALL, "RU_ru");
 
-function heeader($page = 'academicol') {
+function heeader($page = 'academicol')
+{
     if ($page == 'academicol') {
         $styles = 'style.css';
-        $abbriv = 'СПО';
+        $abbriv = 'АК';
         $link = 'http://academicol.ru/students/schedule/';
     } else {
         $styles = 'style2.css';
-        $abbriv = 'ВО';
-        $link = 'http://volbi.ru/glavnaya/raspisanie-zanyatiy/';
+        $abbriv = 'ВИБ';
+        $link = 'http://lk.volbi.ru/glavnaya/raspisanie-zanyatiy/';
     }
     echo '<!DOCTYPE html>
 	<html lang="ru">
 	<head>
     <meta charset="utf-8">
 	<title>Расписание занятий</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
     <script src="https://use.fontawesome.com/00136352b6.js"></script>
 	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
     <meta name="viewport" content="width=device-width, initial-scale=0.9">
-        <link type="text/css" rel="stylesheet" href="https://' . $_SERVER['SERVER_NAME'] . '/' . $styles . '">
+        <link type="text/css" rel="stylesheet" href="' . $styles . '">
 </head>
 <div class="header"><a href="index.php?reload" class="icons col col-sm-1"><i class="fa fa-refresh" aria-hidden="true"></i></a>		
     <a href="' . $link . '" class="logotype col col-sm-10 d-flex justify-content-center">РАСПИ&nbsp;<span class="brand">САНИЕ</span>&nbsp;' . $abbriv . '</a>
@@ -32,18 +32,21 @@ function heeader($page = 'academicol') {
 <div class="body"><br/>';
 }
 
-function footer($page = 'academicol') {
+function footer($page = 'academicol')
+{
+    $cpr = "© <?='2019-'.date('Y').''?> <a href='https://nazbav.github.io/NAZBAV/'><b><u>NAZBAV</u></b></a>";
     if ($page == 'academicol') {
-        echo "</div><br/><br/><br/><a class=\"footer\" href=\"index.php?p=volbi\">Расписание ВИБ</a>
-<script>
-$(document).ready(function() {
-    $('table:eq(-1)').prepend($('<tr>').append($('<th>').html(\"РАСПИСАНИЕ ЗВОНКОВ\")));
-    $('td:contains(\"  \")').remove();
-});
-</script>
+        echo "</div><br/><br/><br/>
+<div>
+ <p style='color: white;text-align: center'>Обновлено: <?=(is_file('last_update.txt')) ? file_get_contents('last_update.txt') : '' ?><br>{$cpr}</p>
+<a class=\"footer\" href=\"index.php?p=volbi\">Расписание ВИБ</a>
+</div>
 <script src=\"main.js\"></script>";
+
     } else {
-        echo "</div><br/><br/><br/><a class=\"footer\" href=\"index.php?p=academicol\">Расписание АК</a></script>
+        echo "</div><br/><br/><br/>
+<p style='color: white;text-align: center'>Обновлено: <?=(is_file('last_update.txt')) ? file_get_contents('last_update.txt') : '' ?><br>{$cpr}</p>
+<a class=\"footer\" href=\"index.php?p=academicol\">Расписание АК</a></script>
 		<script src=\"main.js\"></script></html>";
     }
 }
@@ -58,27 +61,40 @@ $main = explode(MAIN_BLOCK, $content);
 $main = explode(AFTER_BLOCK, $main[1]);
 $content = strip_tags($main[0], '<a><sup><tbody><td><tr><th><table>');
 if (!empty($content)) {
-    $patterns = ['/\$\(\"ul\"\)\.remove\(\"\.fmenu\"\)\;/', '/<([b-z][a-z0-9]*)[^>]*?(\/?)>/i', '/\/upload((.)+\.doc)/', '/\/upload((.)+\.xls)/', '/<.{1,2}>\s+<\/.{1,2}>/u', '/<table>/', '/\s+/', '/(Очная форма обучения:|Заочная форма обучения:)/', '~([0-9]+)\.([0-9]+)\<sup~u', '/<td> ([0-9]+) (пара) <\/td>/u','/id=("|)black("|)/u','~<tr> </tr>~u'];
-    $replacements = ['', '<$1$2>', 'https://docs.google.com/viewer?url=http://academicol.ru/upload$1', 'http://academicol.ru/upload$1', '', '<table class="table table-dark">', ' ', '<h3>$1</h3>', '$1<sup', '','',''];
+
+    $content = strtr($content, ['https://docs.google.com/viewer?url=' => '']);
+
+
+    $patterns = ['/\$\(\"ul\"\)\.remove\(\"\.fmenu\"\)\;/', '/<([b-z][a-z0-9]*)[^>]*?(\/?)>/i', '/http\:\/\/academicol.ru\/upload((.)+\.docx)/', '/\/upload((.)+\.xls)/', '/<.{1,2}>\s+<\/.{1,2}>/u', '/<table>/', '/\s+/', '/(Очная форма обучения:|Заочная форма обучения:)/', '~([0-9]+)\.([0-9]+)\<sup~u', '/<td> ([0-9]+) (пара) <\/td>/u', '/id=("|)black("|)/u', '~<tr> </tr>~u'];
+    $replacements = ['', '<$1$2>', 'https://docs.google.com/viewer?url=http://academicol.ru/upload$1', 'https://docs.google.com/viewer?url=http://academicol.ru/upload$1', '', '<table class="table table-dark">', ' ', '<h3>$1</h3>', '$1<sup', '', '', ''];
+
+//https://docs.google.com/viewer?url=http://academicol.ru/upload
+
 
     $content = preg_replace($patterns, $replacements, $content);
 
 
+    $content = strtr($content,
+        ['.zvonki__content { text-align: left!important; } .zvonki__container, .zvonki__content { width: 100%; } .tdschedule { height: 3rem; } ' => '']);
+
     $grulisty = '';
     $grulisty2 = '';
 
-    if (preg_match_all('/http\:\/\/academicol\.ru\/upload\/price\/postoynnoe_spo\/para\/(.){40,150}\.doc/', $content, $url)) {
 
-        $url = array_unique($url[0]);
+    if (preg_match_all('/http\:\/\/academicol\.ru\/upload\/price\/postoynnoe_spo\/para\/(.){40,150}\.docx/', $content, $urls)) {
+
+        $urls = array_unique($urls[0]);
         include_once 'perser.php';
         $only = false;
-        foreach ($url as $url) {
-         $perser = (read_doc($url));
-         $perser = mb_convert_encoding($perser, 'utf-8', mb_detect_encoding($perser));
-         $perser = strtr($perser, ["\r\n" => '', "\r" => '', "\n" => '', "	" => '', ' ' => '']);
+        foreach ($urls as $url) {
+            $perser = (read_doc($url));
+            //  $perser = mb_convert_encoding($perser, 'utf-8', mb_detect_encoding($perser));
+            $perser = strtr($perser, ["\r\n" => '', "\r" => '', "\n" => '', "	" => '', ' ' => '']);
             $groups = 'ПСО|ПД|ИСП|ТОП|БД|ГД|ПСО|ПКС|ЗИО|Б|К';
             if (preg_match_all('%((([1-5]{1})(' . $groups . ')(\-[0-9]{1,2})(\-[0-9]{1})|([1-5]{1})(' . $groups . ')(\-(11|9)))(,)(([1-5]{1})(' . $groups . ')(\-[0-9]{1,2})(\-[0-9]{1})|([1-5]{1})(' . $groups . ')(\-(11|9))))|(([1-5]{1})(' . $groups . ')(\-[0-9]{1,2})(\-[0-9]{1})|([1-5]{1})(' . $groups . ')(\-(11|9)))%', $perser, $matches)) {
+
                 $matches[0] = array_unique($matches[0]);
+
                 foreach ($matches[0] as $item => $group) {
                     if ($group != '') $grulisty2 .= '<span class="group">' . $group . '</span> ';
                 }
@@ -112,7 +128,7 @@ file_put_contents('academicol.php', $end);
 ////// /////      ////      /////////////////////
 /////////////////////////////////////////////////
 
-const PAGE2 = 'http://volbi.ru/glavnaya/raspisanie-zanyatiy/';
+const PAGE2 = 'http://lk.volbi.ru/glavnaya/raspisanie-zanyatiy/';
 const MAIN_BLOCK2 = '<h1>Расписание занятий</h1>';
 const AFTER_BLOCK2 = '<div id="footer">';
 
@@ -125,7 +141,7 @@ $main = explode(AFTER_BLOCK2, $main[1]);
 $content = strip_tags($main[0], '<a><sup><tbody><td><tr><th><table>');
 if (!empty($content)) {
     $patterns = ['/(УРОВЕНЬ ВО)/', '/\$\(\"ul\"\)\.remove\(\"\.fmenu\"\)\;/', '/<([b-z][a-z0-9]*)[^>]*?(\/?)>/i', '/\/files((.)+\.doc)/', '/\/files((.)+\.xls)/', '/<.{1,2}>\s+<\/.{1,2}>/u', '/<table>/', '/\s+/', '/(Очная форма обучения:|Заочная форма обучения:)/', '~([0-9]+)\.([0-9]+)\<sup~u', '/<td> ([0-9]+) (пара) <\/td>/u'];
-    $replacements = ['', '', '<$1$2>', 'https://docs.google.com/viewer?url=http://volbi.ru/files$1', 'http://volbi.ru/files$1', '', '<table class="table table-dark">', ' ', '<h3>$1</h3>', '$1<sup', ''];
+    $replacements = ['', '', '<$1$2>', 'https://docs.google.com/viewer?url=http://lk.volbi.ru/files$1', 'http://lk.volbi.ru/files$1', '', '<table class="table table-dark">', ' ', '<h3>$1</h3>', '$1<sup', ''];
     $content = preg_replace($patterns, $replacements, $content);
 } else {
     $content = "Ошибка сервера";
@@ -142,4 +158,5 @@ if (filesize('volbi.php') < 1000 || filesize('academicol.php') < 1000) {
     file_put_contents('volbi.php', $text);
     file_put_contents('academicol.php', $text);
 }
-echo date('d-m-Y H:i:s'), " <a href='index.php'>Назад</a>";
+
+file_put_contents('last_update.txt', date('d-m-Y H:i:s'));

@@ -3,7 +3,7 @@ ini_set('session.gc_maxlifetime', 2592000);
 ini_set('session.cookie_lifetime', 0);
 session_set_cookie_params(0);
 session_start();
-if(isset($_GET['reload'])){
+if (isset($_GET['reload'])) {
     include 'cron.php';
     header('location:index.php');
 }
