@@ -16,4 +16,5 @@
   - perser.php - парсер docx файлов (имеется устаревший код)
   - index.php - файл маршрутизации
 
- 
+ ![image](https://user-images.githubusercontent.com/21163205/134767624-bdfffb19-7148-4060-9215-70027748170f.png)
+
